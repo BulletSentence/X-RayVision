@@ -21,3 +21,6 @@ if os.path.isdir(os.path.join((root_dir, source_dirs[1]))):
 
     for i, d in enumerate(source_dirs):
         os.rename(os.path.join(root_dir, d), os.path.join(root_dir, class_names[i]))
+
+    for c in class_names:
+        os.mkdir(os.path.join(root_dir, 'test', c))
