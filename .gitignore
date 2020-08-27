@@ -25,3 +25,5 @@ ext/run-tests.php
 ext/.deps
 ext/libtool
 Covid Database/COVID-19.metadata.xlsx
+Covid Database/COVID-19/COVID-19 (101).png
+*.png
