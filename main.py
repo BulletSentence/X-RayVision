@@ -32,3 +32,32 @@ if os.path.isdir(os.path.join((root_dir, source_dirs[1]))):
             source_path = os.path.join(root_dir, c, image)
             target_path = os.path.join(root_dir, 'test', c, image)
             shutil.move(source_path, target_path)
+            
+class ChestXRayDataset(torch.utils.data.Dataset):
+    def __init__(self, image_dirs, transform):
+        def get_images(class_name):
+            images = [x for x in os.listdir(image_dirs[class_name]) if x[-3:].lower().endswith('png')]
+            print(f'Found {len(images)} {class_name} examples')
+            return images
+        
+        self.images = {}
+        self.class_names = ['normal', 'viral', 'covid']
+        
+        for class_name in self.class_names:
+            self.images[class_name] = get_images(class_name)
+            
+        self.image_dirs = image_dirs
+        self.transform = transform
+        
+    
+    def __len__(self):
+        return sum([len(self.images[class_name]) for class_name in self.class_names])
+    
+    
+    def __getitem__(self, index):
+        class_name = random.choice(self.class_names)
+        index = index % len(self.images[class_name])
+        image_name = self.images[class_name][index]
+        image_path = os.path.join(self.image_dirs[class_name], image_name)
+        image = Image.open(image_path).convert('RGB')
+        return self.transform(image), self.class_names.index(class_name)
