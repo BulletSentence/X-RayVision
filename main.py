@@ -76,3 +76,19 @@ test_transform = torchvision.transforms.Compose([
     torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
 ])
     
+train_dirs = {
+    'normal': 'Covid Database/normal',
+    'viral': 'Covid Database/viral',
+    'covid': 'Covid Database/covid'
+}
+
+train_dataset = ChestXRayDataset(train_dirs, train_transform)
+
+test_dirs = {
+    'normal': 'COVID-19 Radiography Database/test/normal',
+    'viral': 'COVID-19 Radiography Database/test/viral',
+    'covid': 'COVID-19 Radiography Database/test/covid'
+}
+
+test_dataset = ChestXRayDataset(test_dirs, test_transform)
+
