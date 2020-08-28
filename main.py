@@ -61,3 +61,5 @@ class ChestXRayDataset(torch.utils.data.Dataset):
         image_path = os.path.join(self.image_dirs[class_name], image_name)
         image = Image.open(image_path).convert('RGB')
         return self.transform(image), self.class_names.index(class_name)
+
+    
