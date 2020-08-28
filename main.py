@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot
 
 from PIL import Image
+from networkx.drawing.tests.test_pylab import plt
 
 torch.manual_seed(0)
 
@@ -85,10 +86,39 @@ train_dirs = {
 train_dataset = ChestXRayDataset(train_dirs, train_transform)
 
 test_dirs = {
-    'normal': 'COVID-19 Radiography Database/test/normal',
-    'viral': 'COVID-19 Radiography Database/test/viral',
+    'normal': 'Covid Database/test/normal',
+    'viral': 'Covid Database/test/viral',
     'covid': 'COVID-19 Radiography Database/test/covid'
 }
 
 test_dataset = ChestXRayDataset(test_dirs, test_transform)
 
+batch_size = 6
+
+dl_train = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+dl_test = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
+
+print('Number of training batches', len(dl_train))
+print('Number of test batches', len(dl_test))
+
+class_names = train_dataset.class_names
+
+
+def show_images(images, labels, preds):
+    plt.figure(figsize=(8, 4))
+    for i, image in enumerate(images):
+        plt.subplot(1, 6, i + 1, xticks=[], yticks=[])
+        image = image.numpy().transpose((1, 2, 0))
+        mean = np.array([0.485, 0.456, 0.406])
+        std = np.array([0.229, 0.224, 0.225])
+        image = image * std + mean
+        image = np.clip(image, 0., 1.)
+        plt.imshow(image)
+        col = 'green'
+        if preds[i] != labels[i]:
+            col = 'red'
+
+        plt.xlabel(f'{class_names[int(labels[i].numpy())]}')
+        plt.ylabel(f'{class_names[int(preds[i].numpy())]}', color=col)
+    plt.tight_layout()
+    plt.show()
